@@ -1,0 +1,6 @@
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 266 sequences (102670 bp)...
+[M::mem_process_seqs] Processed 266 reads in 0.074 CPU sec, 0.074 real sec
+[main] Version: 0.7.17-r1188
+[main] CMD: bwa mem -T 19 /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_ref.fa /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_output//CIRI-full_output/test_ro1.fq
+[main] Real time: 0.086 sec; CPU: 0.084 sec

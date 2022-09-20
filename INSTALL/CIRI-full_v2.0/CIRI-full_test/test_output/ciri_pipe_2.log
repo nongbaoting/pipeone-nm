@@ -1,0 +1,19 @@
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 6922 sequences (1730500 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (0, 1485, 328, 0)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (152, 322, 4465)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 13091)
+[M::mem_pestat] mean and std.dev: (2415.25, 3386.09)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 17404)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (4170, 4351, 6812)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 12096)
+[M::mem_pestat] mean and std.dev: (4596.35, 2927.87)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 16308)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_process_seqs] Processed 6922 reads in 6.020 CPU sec, 6.020 real sec
+[main] Version: 0.7.17-r1188
+[main] CMD: bwa mem -T 19 -t 1 /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_ref.fa /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_1.fq.gz /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_2.fq.gz
+[main] Real time: 6.063 sec; CPU: 6.052 sec

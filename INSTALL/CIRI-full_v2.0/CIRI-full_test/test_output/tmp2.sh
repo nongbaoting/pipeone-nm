@@ -1,0 +1,2 @@
+#!/bin/sh
+bwa mem -T 19 /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_ref.fa /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_output//CIRI-full_output/test_ro1.fq > /public5/lisj/Software/CIRI-full_v2.0/CIRI-full_test/test_output//sam/test_ro.sam
