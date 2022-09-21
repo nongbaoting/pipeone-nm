@@ -1,6 +1,6 @@
-signalp_path = params.signalp_path
-tmhmm_path = params.tmhmm_path
-rnammer_path = params.rnammer_path
+// signalp_path = params.signalp_path
+// tmhmm_path = params.tmhmm_path
+// rnammer_path = params.rnammer_path
 
 process Search_Transcripts {
         label "bigCPU"
@@ -94,7 +94,7 @@ process Hmmscan_Predict {
 }
 
 process Signalp {
-		
+	label "local"
         publishDir "${params.outdir}/trinotate/", mode: 'link',
             saveAs: {filename -> 
                 if (filename =~/signalp/) "signalp/${filename}"
@@ -116,15 +116,15 @@ process Signalp {
         script:
 
         """
-        set +u; source activate pipeone_nm_3; set -u
-        ${signalp_path}/signalp -f short -n signalp.out -T . Transcripts.fasta.transdecoder.pep > signalp.log 2>&1
+       
+        signalp -f short -n signalp.out -T . Transcripts.fasta.transdecoder.pep > signalp.log 2>&1
         
         
         """
 }
 
 process Tmhmm {
-		
+	label "local"
         publishDir "${params.outdir}/trinotate/", mode: 'link',
             saveAs: {filename -> 
                 if (filename =~/tmhmm/) "tmhmm/${filename}"
@@ -145,15 +145,18 @@ process Tmhmm {
         script:
 
         """
-        set +u; source activate pipeone_nm_3; set -u
-        cat Transcripts.fasta.transdecoder.pep | ${tmhmm_path}/bin/tmhmm --short > tmhmm.out
+       
+        cat Transcripts.fasta.transdecoder.pep | tmhmm --short > tmhmm.out
         
         
         """
 }
 
 process Rnammer {
-		
+	label "local"
+        label "bigCPU"
+        label "bigMEM"
+
         publishDir "${params.outdir}/trinotate/", mode: 'link',
             saveAs: {filename -> 
                 if (filename =~/gff/) "rnammer/${filename}"
@@ -175,10 +178,12 @@ process Rnammer {
         script:
 
         """
-        set +u; source activate pipeone_nm_3; set -u
-        ${rnammer_path}/rnammer_support/RnammerTranscriptome.pl --transcriptome Transcripts.fasta --path_to_rnammer ${rnammer_path}/rnammer > rnammer.log 2>&1
-
         
+        rnammer_path=\$(which rnammer)
+        RnammerTranscriptome.pl --transcriptome Transcripts.fasta --path_to_rnammer \$rnammer_path > rnammer.log 2>&1
+        if [ ! -f "Transcripts.fasta.rnammer.gff" ];then
+                touch Transcripts.fasta.rnammer.gff
+        fi
         """
 }
 
@@ -225,7 +230,13 @@ process Trinotate {
 
         Trinotate Trinotate_20210616.sqlite LOAD_signalp signalp.out > load_signalp.log 2>&1
 
-        Trinotate Trinotate_20210616.sqlite LOAD_rnammer Transcripts.fasta.rnammer.gff > load_rnammer.log 2>&1
+        if [ ! -s "Transcripts.fasta.rnammer.gff" ];then
+                
+                Trinotate Trinotate_20210616.sqlite LOAD_rnammer Transcripts.fasta.rnammer.gff > load_rnammer.log 2>&1
+        else
+                echo "no rRNA detected"> load_rnammer.log
+        fi
+       
 
         Trinotate Trinotate_20210616.sqlite report --incl_pep --incl_trans > Trinotate.xls 2> report.log
         

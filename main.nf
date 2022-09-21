@@ -9,15 +9,17 @@ nextflow.enable.dsl=2
 
 
 // defined params
-params.reads =''
 params.sra = ''
+params.fastq = ''
+params.genome
 params.cleaned  = false
-params.refgenome = "/public5/lisj/Genome/GCA_019924925.1_HZGC01_genomic.fna"
-params.min_length = 150
-params.ref_miRNA = '/public5/lisj/FishmiRNA-June2021-dre-mature.fasta'
-params.sqlite = "${baseDir}/data/Trinotate_20210616.sqlite"
-params.uniprot = "${baseDir}/Trinotate/uniprot_sprot.pep"
-params.pfam = "${baseDir}/Trinotate/Pfam-A.hmm"
+
+params.refgenome = params.genome ? params.genomes[ params.genome ].refgenome ?: false : false
+params.min_length = params.genome ? params.genomes[ params.genome ].min_length ?: false : false
+params.ref_miRNA = params.genome ? params.genomes[ params.genome ].ref_miRNA ?: false : false
+params.sqlite = params.genome ? params.genomes[ params.genome ].sqlite ?: false : false
+params.uniprot = params.genome ? params.genomes[ params.genome ].uniprot ?: false : false
+params.pfam = params.genome ? params.genomes[ params.genome ].pfam ?: false : false
 
 // config_file = '/public5/lisj/Software/CIRI-quant/CIRI-quantContig.yaml'
 as_files = tuple('/public5/lisj/18_AS/AS_con1.txt', '/public5/lisj/18_AS/AS_con2.txt')
@@ -46,7 +48,6 @@ include { Rmats } from "${baseDir}/modules/process/rmats.nf"
 
 
 log.info Header()
-
 def refgenome = check_file(params.refgenome,'refgenome')
 def uniprot = check_file(params.uniprot, 'uniprot')
 def pfam = check_file(params.pfam,'pfam')
@@ -54,12 +55,18 @@ def ref_miRNA = check_file(params.ref_miRNA,'ref_miRNA')
 def sqlite = check_file(params.sqlite, 'sqlite')
 
 workflow {
-    
-    sraFiles = input_sra(params.sra)
-   
 
-    Fasterq_dump(sraFiles)
-    reads = Fasterq_dump.out.reads.map{it -> [it[0], [it[1], it[2]]] }
+    if(params.sra && ! params.fastq){
+        sraFiles = input_sra(params.sra)
+        Fasterq_dump(sraFiles)
+        reads = Fasterq_dump.out.reads.map{it -> [it[0], [it[1], it[2]]] }
+    }else if(!params.sra &&  params.fastq){
+        reads = input_reads(params.fastq)
+    }else{
+        log.info "\033[0;35m" + "Please provide sra/fasq files with parameter: --sra or --fastq !" + "\033[0m"
+        System.exit(1)
+    }
+    
     
     Fastp(reads)
     cleaned_reads = Fastp.out.cleaned_reads.map{it -> [it[0], [it[1], it[2]]] }

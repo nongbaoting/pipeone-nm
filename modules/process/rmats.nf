@@ -18,7 +18,7 @@ process Rmats {
 
         """
         
-        python3 /dat1/xush/miniconda3/envs/pipeone_nm/rMATS/rmats.py --readLength 150 --variable-read-length --b1 AS_con1.txt --b2 AS_con2.txt --gtf assembly.gtf -t paired --od c1c2 --tmp tmp
+        rmats.py --readLength 150 --variable-read-length --b1 AS_con1.txt --b2 AS_con2.txt --gtf assembly.gtf -t paired --od c1c2 --tmp tmp
 
         
         """

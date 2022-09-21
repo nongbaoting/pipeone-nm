@@ -108,8 +108,8 @@ def Header() {
             ${c_yellow}        |_| ${c_reset}
 
 
-            ${c_purple}${workflow.manifest.name} v${workflow.manifest.version}${c_reset}
-            ${c_purple}Author: ${workflow.manifest.author}${c_reset}
+            ${c_dim}${workflow.manifest.name} v${workflow.manifest.version}${c_reset}
+            ${c_dim}Author: ${workflow.manifest.author}${c_reset}
 -${c_yellow}------------------------------------------------------------------------------${c_reset}-
     """.stripIndent()
 }
